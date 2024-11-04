@@ -1,0 +1,58 @@
+.scroll-container {
+    width: 100%;
+  }
+  
+  .scrolling-wrapper {
+    animation: loop-scroll 5s linear infinite;
+    display: flex;
+  }
+  
+  @keyframes loop-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+
+  .scroll-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .fade-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* width: 100px; Adjust the width as needed */
+    background: linear-gradient(to right, #282E38, rgba(40, 46, 56, 0));
+    pointer-events: none;
+  }
+  
+  /* .fade-overlay.right-0 {
+    right: 0;
+    left: auto;
+    background: linear-gradient(to left, #282E38, rgba(40, 46, 56, 0));
+
+  }
+
+  .fade-overlay.leftt-0 {
+    right: 0;
+    left: auto;
+    background: linear-gradient(to left, #282E38, rgba(40, 46, 56, 0));
+
+  } .fade-overlay.right-0 {
+    right: 0;
+    left: auto;
+    background: linear-gradient(to left, #282E38, rgba(40, 46, 56, 0));
+
+  } */
+
+  #card {
+    position: relative;
+    padding: 2rem; /* Adjust padding as needed */
+  }
+  
+  
