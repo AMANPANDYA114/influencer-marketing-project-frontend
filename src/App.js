@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from './components/Navbar';
-import Profile from './screens/Profile';
+
 
 function App() {
   return (
@@ -11,3 +11,7 @@ function App() {
 }
 
 export default App;
+
+
+
+

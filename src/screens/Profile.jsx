@@ -1,30 +1,130 @@
-import React from "react";
-import { CiLocationOn } from "react-icons/ci";
+import React, { useEffect, useState } from "react";
 import { AiFillInstagram } from "react-icons/ai";
+import { CiLocationOn } from "react-icons/ci";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import ScrollAni from "../components/ScrollAni";
-import { FaRegHeart } from "react-icons/fa";
-import { AiOutlineAreaChart } from "react-icons/ai";
-
-
+import { Link } from 'react-router-dom';
 const Profile=()=>{
+
+  const [fullName, setFullName] = useState("");
+  const [Bio, setBio] = useState(""); 
+  const [role, setrole] = useState(""); 
+  const [location, setLocation] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [profilePicUrl, setProfilePicUrl] = useState("");
+    const token = localStorage.getItem('token');
+
+
+    useEffect(() => {
+      const fetchLocation = () => {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                  (position) => {
+                      const { latitude, longitude } = position.coords;
+                      fetchLocationName(latitude, longitude);
+                  },
+                  (error) => {
+                      console.error('Error getting location:', error);
+                      setLocation('Unable to retrieve location');
+                      setLoading(false);
+                  }
+              );
+          } else {
+              setLocation('Geolocation not supported');
+              setLoading(false);
+          }
+      };
+
+      const fetchLocationName = async (latitude, longitude) => {
+          try {
+              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+              const data = await response.json();
+              setLocation(data.display_name || 'Location not found');
+          } catch (error) {
+              console.error('Error fetching location name:', error);
+              setLocation('Error fetching location name');
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchLocation();
+  }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/user/profile", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                const data = await response.json();
+                if (response.ok) {
+                 console.log("Name is", data.user.fullName);
+                    setFullName(data.user.fullName);
+                    console.log("bio is ", data.user.userBio)
+                    console.log("role is ", data.user.userRole) 
+                    setBio(data.user.userBio);
+                    setrole(data.user.userRole)
+                    setProfilePicUrl(data.user.profilePicUrl);
+                } else {
+                    console.error("Failed to fetch data:", data);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, [token]);
+
     return(
         <div className="h-full pb-20 flex flex-col justify-start mt-16 lg:ml-[320px]" style={{ backgroundColor: '#282E38'}}>
-        <div className="w-fit h-fit mx-20 mt-6 rounded-md border-gray-800 border py-8 px-12" style={{backgroundColor:'#303743',boxShadow: 'inset rgb(6 8 12 / 50%) -1px -1px 1px 0px'}}>
+   
+   <div className="w-fit h-fit mx-20 mt-6 rounded-md border-black-800 border py-8 px-12" style={{backgroundColor:'#303743',boxShadow: 'inset rgb(6 8 12 / 50%) -1px -1px 1px 0px'}}>
           <div className="flex justify-between" id="row-1">
 
                 <div className="flex">
+                <div className="w-32 h-32 bg-white rounded-full relative mr-5 flex items-center justify-center"> {/* Increased size */}
+  <img 
+    src={profilePicUrl} 
+    alt={`${fullName}'s profile`} 
+    className="w-full h-full rounded-full object-cover" 
+  />
+             
+                <Link to="/update"> {/* Link to the update path */}
+                <img 
+    src="https://i.postimg.cc/gJc1sXzn/266146.png" // Edit icon image URL
+    alt="Edit Icon" 
+    className="w-4 h-4 absolute bottom-0 left-1 cursor-pointer" // Added cursor pointer for better UX
+ // Correctly formatted inline styles
+/>
 
-                    <div className="w-24 h-24 bg-white rounded-full mr-5"></div>
+                </Link>
+</div>
+
+
+
+                    {/* <div className="w-24 h-24 bg-white rounded-full mr-5">d</div> */}
                     <div className="flex flex-col items-stretch justify-between">
                         <div>
-                        <p className="text-white">INfluencer Name</p>
-                        <p className=" text-gray-200">fashion Blogger</p>
+                        <p className="text-white">INfluencer Name :- </p>
+                        <p className=" text-gray-200">{fullName}</p>
+                        <p className="text-white">BIO:- </p>
+                        <p className=" text-gray-200">{Bio}</p>
+                   
                         </div>
-                        
+                        <br></br>
                         <div className="flex">
-                        <CiLocationOn size={22} color="gray"/><p className="text-white pl-1">Kolkata, West Bengal</p>
-                        </div>    
+                        <CiLocationOn size={22} color="gray"/><p className="text-white pl-1">{loading ? 'Fetching location...' : location}</p>
+                        </div>  
+
+
+                  
+  
                     </div>
                 </div>
 
@@ -321,3 +421,8 @@ const Profile=()=>{
 }
 
 export default Profile;
+
+
+
+
+

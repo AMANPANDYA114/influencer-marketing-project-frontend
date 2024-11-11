@@ -1,26 +1,29 @@
-import { React,useState } from "react";
-import { IoNotificationsSharp } from "react-icons/io5";
-import { IoClose } from 'react-icons/io5';
-import { MdDashboard } from "react-icons/md";
-import { PiLinkSimpleBold } from "react-icons/pi";
-import { MdCampaign } from "react-icons/md";
+import { React, useState } from "react";
 import { HiOutlineCash } from "react-icons/hi";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
-import  Profile  from "../screens/Profile";
-import EnhancedTable from "../screens/MyCampaigns";
-import MyCampaigns from "../screens/Campaigns";
-import Tasks from "./Tasks";
-import Submit from "./SubmitTask";
-import Payments from "../screens/Payments";
-import IndividualC from "./IndividualCampaign";
+import { IoClose, IoNotificationsSharp } from "react-icons/io5";
+import { MdCampaign, MdDashboard } from "react-icons/md";
+import { PiLinkSimpleBold } from "react-icons/pi";
+import { Link, Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AffiliateLinks from "../screens/AffiliateLinks";
+import MyCampaigns from "../screens/Campaigns";
+import ForgotPasswordModal from '../screens/ForgotPasswordModal';
+import OtpInputComponent from '../screens/OtpInputComponent';
+import ChangePassword from '../screens/ChangePassword';
 import IndividualAffilate from "../screens/IndividualAffiliate";
+import Login from "../screens/Login";
+import EnhancedTable from "../screens/MyCampaigns";
+import Payments from "../screens/Payments";
+import Profile from "../screens/Profile";
+import Signup from '../screens/Signup';
+import IndividualC from "./IndividualCampaign";
 import SubLink from "./SubmitLink";
-
+import Submit from "./SubmitTask";
+import Tasks from "./Tasks";
+import ProfileForm from "../screens/ProfileForm";
 const Navbar = () => {
 
     const [showNotifications, setShowNotifications] = useState(false);
-
+    const [showLogin, setShowLogin] = useState(false);
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
   };
@@ -28,6 +31,9 @@ const Navbar = () => {
   const closeNotifications = () => {
     setShowNotifications(false);
   };
+  const toggleLogin = () => {
+   setShowLogin(!showLogin);
+};
 
     return (
         <div className="w-full h-screen">
@@ -75,12 +81,21 @@ const Navbar = () => {
           </ul>
         </div>
       )}
+
+
+<button onClick={toggleLogin} className="text-white ml-6">Login</button>
+
            
         </div>
         </div>
     </div>
   </div>
 </nav>
+{showLogin && (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <Login onClose={toggleLogin} />
+    </div>
+)}
 
 <div className="flex flex-row w-full">
 <aside id="logo-sidebar" class="fixed px-3 top-0 left-0  w-80 h-screen pt-24 transition-transform -translate-x-full bg-white  lg:translate-x-0" aria-label="Sidebar" style={{backgroundColor:'#303743', boxShadow: '2px -1px 4px -2px rgba(0, 0, 0, 0.5)' }}>
@@ -142,11 +157,23 @@ const Navbar = () => {
             </Link>
          </li>
         
+
+
+
+
+
       </ul>
       </div>
    </aside>
 
             <Routes>
+         
+            <Route path="/update" element={<ProfileForm/>} />
+            <Route path="/otp" element={< OtpInputComponent />} />
+            <Route path="/change" element={< ChangePassword  />} />
+            <Route path="/forgetpass" element={< ForgotPasswordModal/>} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={< Login/>} />
                 <Route path="/" element={<Navigate to="/profile" />} />
                 <Route path="/dashboard" element={<div>Dashboard Content</div>} />
                 <Route path="/affiliate-links" element={<AffiliateLinks />} />  
@@ -278,3 +305,7 @@ const Navbar = () => {
 
 
 export default Navbar;
+
+
+
+
